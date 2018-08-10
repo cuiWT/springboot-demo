@@ -1,5 +1,6 @@
 package com.example.provider.service;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.baidu.unbiz.easymapper.MapperFactory;
 import com.example.provider.dao.DinnerDao;
 import com.example.provider.model.Dinner;
@@ -10,14 +11,15 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Service
+@Component
+@Service(interfaceClass = DinnerReadService.class)
 public class DinnerReadServiceImpl implements DinnerReadService {
 
     @Autowired
