@@ -1,4 +1,4 @@
-D:\workcode\dinner\provider-api\src\main\java\com\example\providerApi\model\Dinner.java
-D:\workcode\dinner\provider-api\src\main\java\com\example\providerApi\ApiConfig.java
+D:\workcode\dinner\provider-api\src\main\java\com\example\providerApi\dto\DinnerDTO.java
 D:\workcode\dinner\provider-api\src\main\java\com\example\providerApi\service\DinnerWriteService.java
 D:\workcode\dinner\provider-api\src\main\java\com\example\providerApi\service\DinnerReadService.java
+D:\workcode\dinner\provider-api\src\main\java\com\example\providerApi\util\Response.java

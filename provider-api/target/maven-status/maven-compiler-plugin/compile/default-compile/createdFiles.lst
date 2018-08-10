@@ -1,4 +1,4 @@
-com\example\providerApi\model\Dinner.class
-com\example\providerApi\ApiConfig.class
+com\example\providerApi\dto\DinnerDTO.class
+com\example\providerApi\util\Response.class
 com\example\providerApi\service\DinnerReadService.class
 com\example\providerApi\service\DinnerWriteService.class

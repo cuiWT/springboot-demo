@@ -7,3 +7,10 @@ spring:
   dubbo:
     server: true
     registry: N/A
+  datasource:
+    url: jdbc:mysql://localhost:3306/test
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: anywhere
+
+spring.jpa.properties.hibernate.hbm2ddl.auto: create-drop
