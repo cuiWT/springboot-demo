@@ -1,0 +1,5 @@
+com\example\provider\service\DinnerWriteServiceImpl.class
+com\example\provider\dao\DinnerDao.class
+com\example\provider\service\DinnerReadServiceImpl.class
+com\example\provider\ProviderApplication.class
+com\example\provider\ProviderConfig.class
