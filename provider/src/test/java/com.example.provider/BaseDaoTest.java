@@ -17,8 +17,6 @@ import java.io.IOException;
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@EntityScan("com.example.provider.model")
-@EnableJpaRepositories("com.example.provider.dao")
 @ContextConfiguration(classes = ProviderTestConfig.class)
 public class BaseDaoTest {
 

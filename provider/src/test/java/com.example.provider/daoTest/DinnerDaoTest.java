@@ -49,6 +49,7 @@ public class DinnerDaoTest extends BaseDaoTest {
     @Test
     public void testSave() {
         dinner.setUserName("updateName");
+        dinnerDao.save(dinner);
         Optional<Dinner> exist = dinnerDao.findById(dinner.getId());
         Assert.assertTrue(exist.isPresent());
         Assert.assertEquals("updateName", exist.get().getUserName());
