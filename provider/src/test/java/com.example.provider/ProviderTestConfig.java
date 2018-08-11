@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableAutoConfiguration
 @EntityScan("com.example.provider.model")
-@ComponentScan("com.example.provider.dao")
+@ComponentScan("com.example.provider")
 @EnableJpaRepositories("com.example.provider.dao")
 public class ProviderTestConfig {
 }
