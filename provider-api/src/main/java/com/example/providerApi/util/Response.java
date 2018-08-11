@@ -2,8 +2,12 @@ package com.example.providerApi.util;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class Response<T> {
+public class Response<T> implements Serializable {
+
+    private static final long serialVersionUID = 7608609760694675807L;
 
     private Boolean success;
 

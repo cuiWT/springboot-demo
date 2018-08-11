@@ -5,6 +5,8 @@ import com.example.providerApi.dto.DinnerDTO;
 import com.example.providerApi.service.DinnerReadService;
 import com.example.providerApi.service.DinnerWriteService;
 import com.example.providerApi.util.Response;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@Api("大吉大利，今晚吃鸡")
 @RequestMapping("/api/dinner")
 public class Dinners {
 
@@ -22,6 +25,7 @@ public class Dinners {
     private DinnerReadService dinnerReadService;
 
     @GetMapping("{id}")
+    @ApiOperation(value = "根据ID查找")
     public DinnerDTO find(@PathVariable Long id) throws Exception {
         Response<DinnerDTO> resp = dinnerReadService.findById(id);
         if (!resp.isSuccess()) {
@@ -33,6 +37,7 @@ public class Dinners {
     }
 
     @GetMapping
+    @ApiOperation(value = "批量查找")
     public List<DinnerDTO> findByIds(List<Long> ids) throws Exception {
         Response<List<DinnerDTO>> resp = dinnerReadService.findByIds(ids);
         if (!resp.isSuccess()) {
@@ -44,7 +49,8 @@ public class Dinners {
     }
 
     @PostMapping
-    public Boolean save(DinnerDTO dinnerDTO) throws Exception {
+    @ApiOperation(value = "创建&更新")
+    public Boolean save(@RequestBody DinnerDTO dinnerDTO) throws Exception {
         Response<Boolean> response = dinnerWriteService.save(dinnerDTO);
         if (!response.isSuccess()) {
             log.error("save dinner:{} fail, cause:{}", dinnerDTO, response.getError());
@@ -54,6 +60,7 @@ public class Dinners {
     }
 
     @DeleteMapping
+    @ApiOperation(value = "删除")
     public Boolean deleteById(Long id) throws Exception {
         Response<Boolean> resp = dinnerWriteService.deleteById(id);
         if (!resp.isSuccess()) {
