@@ -14,7 +14,7 @@
 - dao层测试sql正确性。建议使用h2内存数据库作为测试数据库。
 - service层使用mock验证本层逻辑。不关心dao层逻辑。
 - controller层同service层。
-- http对外暴露的就扣可以使用swagger来生成文档。
+- http对外暴露的就扣可以使用swagger来生成文档。swagger访问地址localhost:8000/swagger-ui.html#/
 
 ### 巧妙的设计
 
