@@ -5,11 +5,21 @@ import com.example.providerApi.dto.DinnerDTO;
 import com.example.providerApi.service.DinnerReadService;
 import com.example.providerApi.service.DinnerWriteService;
 import com.example.providerApi.util.Response;
+import io.github.swagger2markup.GroupBy;
+import io.github.swagger2markup.Language;
+import io.github.swagger2markup.Swagger2MarkupConfig;
+import io.github.swagger2markup.Swagger2MarkupConverter;
+import io.github.swagger2markup.builder.Swagger2MarkupConfigBuilder;
+import io.github.swagger2markup.markup.builder.MarkupLanguage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Slf4j
@@ -68,5 +78,21 @@ public class Dinners {
             throw new Exception(resp.getError());
         }
         return resp.getResult();
+    }
+
+    @GetMapping("/swagger")
+    public void swagger() throws MalformedURLException {
+        Path outputFile = Paths.get("build/swagger");
+        Swagger2MarkupConfig config = new Swagger2MarkupConfigBuilder()
+                .withMarkupLanguage(MarkupLanguage.MARKDOWN)
+                .withOutputLanguage(Language.ZH)
+                .withPathsGroupedBy(GroupBy.TAGS)
+                .withGeneratedExamples()
+                .withoutInlineSchema()
+                .build();
+        Swagger2MarkupConverter converter = Swagger2MarkupConverter.from(new URL("http://localhost:8000/v2/api-docs"))
+                .withConfig(config)
+                .build();
+        converter.toFile(outputFile);
     }
 }
