@@ -1,12 +1,12 @@
 package com.example.consumerTest;
 
+import javafx.util.Pair;
 import org.junit.Test;
+import org.springframework.util.CollectionUtils;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CompareFileTest {
 
@@ -22,32 +22,33 @@ public class CompareFileTest {
 
         File file = new File("/Users/yicheng/Downloads/language/python/python-code/git/git");
         // 根据用户输入的文件名和目录执行代码量统计
-        Map<String, String> javaMap = new HashMap<>();
-        Map<String, String> configMap = new HashMap<>();
-        Map<String, String> sqlMap = new HashMap<>();
-        Map<String, String> otherMap = new HashMap<>();
-        codeStat(file, javaMap, configMap, sqlMap, otherMap);
+        List<FileNameDTO> javaDtoList = new ArrayList<>();
+        List<FileNameDTO> configDtoList = new ArrayList<>();
+        List<FileNameDTO> sqlDtoList = new ArrayList<>();
+        List<FileNameDTO> otherDtoList = new ArrayList<>();
+        codeStat(file, javaDtoList, configDtoList, sqlDtoList, otherDtoList);
 
         //-----------------------------------------------------
 
         File newFile = new File("/Users/yicheng/Downloads/language/python/python-code/git/git");
         // 根据用户输入的文件名和目录执行代码量统计
-        Map<String, String> newJavaMap = new HashMap<>();
-        Map<String, String> newConfigMap = new HashMap<>();
-        Map<String, String> newSqlMap = new HashMap<>();
-        Map<String, String> newOtherMap = new HashMap<>();
-        codeStat(file, newJavaMap, newConfigMap, newSqlMap, newOtherMap);
+        List<FileNameDTO> newJavaDtoList = new ArrayList<>();
+        List<FileNameDTO> newConfigDtoList = new ArrayList<>();
+        List<FileNameDTO> newSqlDtoList = new ArrayList<>();
+        List<FileNameDTO> newOtherDtoList = new ArrayList<>();
+        codeStat(newFile, newJavaDtoList, newConfigDtoList, newSqlDtoList, newOtherDtoList);
 
         //------------------------------------------------------
 
-        Set<String> javaKey = javaMap.keySet();
-        Set<String> configKey = configMap.keySet();
-        Set<String> sqlKey = sqlMap.keySet();
-        Set<String> otherKey = otherMap.keySet();
-        Set<String> newJavaKey = newJavaMap.keySet();
-        Set<String> newConfigKey = newConfigMap.keySet();
-        Set<String> newSqlKey = newSqlMap.keySet();
-        Set<String> newOtherKey = newOtherMap.keySet();
+        List<String> javaKey = javaDtoList.stream().map(FileNameDTO::getShotName).collect(Collectors.toList());
+        List<String> configKey = configDtoList.stream().map(FileNameDTO::getShotName).collect(Collectors.toList());
+        List<String> sqlKey = sqlDtoList.stream().map(FileNameDTO::getShotName).collect(Collectors.toList());
+        List<String> otherKey = otherDtoList.stream().map(FileNameDTO::getShotName).collect(Collectors.toList());
+
+        List<String> newJavaKey = newJavaDtoList.stream().map(FileNameDTO::getShotName).collect(Collectors.toList());
+        List<String> newConfigKey = newConfigDtoList.stream().map(FileNameDTO::getShotName).collect(Collectors.toList());
+        List<String> newSqlKey = newSqlDtoList.stream().map(FileNameDTO::getShotName).collect(Collectors.toList());
+        List<String> newOtherKey = newOtherDtoList.stream().map(FileNameDTO::getShotName).collect(Collectors.toList());
 
         System.out.println("－－－－－－－－－－统计结果－－－－－－－－－\n");
         System.out.print("java:\n" );
@@ -68,14 +69,14 @@ public class CompareFileTest {
     private Boolean needScan(File pathname) {
         return !pathname.getName().endsWith(".iml")
                 && !pathname.getName().endsWith(".jupiter")
-                && !pathname.getName().contains(".gitignore")
+                && !pathname.getName().endsWith(".gitignore")
                 && !pathname.getName().contains(".git")
                 && !pathname.getName().endsWith(".review");
     }
 
-    private void codeStat(File file, Map<String, String> javaMap,
-                          Map<String, String> configMap, Map<String, String> sqlMap,
-                          Map<String, String> otherMap) throws FileNotFoundException {
+    private void codeStat(File file, List<FileNameDTO> javaDtoList,
+                          List<FileNameDTO> configDtoList, List<FileNameDTO> sqlDtoList,
+                          List<FileNameDTO> otherDtoList) throws FileNotFoundException {
         if (file == null || !file.exists()) {
             throw new FileNotFoundException(file + "，文件不存在！");
         }
@@ -90,10 +91,11 @@ public class CompareFileTest {
             });
 
             for (File target : files) {
-                codeStat(target, javaMap, configMap, sqlMap, otherMap);
+                codeStat(target, javaDtoList, configDtoList, sqlDtoList, otherDtoList);
             }
         } else {
             String fileName = file.getAbsolutePath();
+            String fileMd5 = Md5Util.getMd5ByFile(file);
             String[] wonhigh = fileName.split("cn/wonhigh/o2o/");
             String shortName =  wonhigh.length > 1
                     ? wonhigh[1]
@@ -105,17 +107,45 @@ public class CompareFileTest {
                     .replace("miu-intemarket/","")
                     .replace("miu-mshop/", "")
                     .replace("miu-tag/", "");
-
+            Pair<String, String> pair = new Pair<>(fileName, fileMd5);
+            FileNameDTO fileNameDTO = new FileNameDTO();
+            fileNameDTO.setFullName(fileName);
+            fileNameDTO.setShotName(shortName);
+            fileNameDTO.setMd5(fileMd5);
             if (fileName.endsWith(".java")) {
-                javaMap.put(shortName, fileName);
+                javaDtoList.add(fileNameDTO);
             } else if (fileName.endsWith(".sql")) {
-                sqlMap.put(shortName, fileName);
+                sqlDtoList.add(fileNameDTO);
             } else if (fileName.endsWith(".xml") || fileName.endsWith(".properties")) {
-                configMap.put(shortName, fileName);
+                configDtoList.add(fileNameDTO);
             } else {
-                otherMap.put(shortName, fileName);
+                otherDtoList.add(fileNameDTO);
             }
         }
     }
+
+    private void writeCsv(List<ResultDTO> resultDTOList) {
+        try {
+            if (CollectionUtils.isEmpty(resultDTOList)) {
+                return;
+            }
+            File csv = new File("/Users/yicheng/belle/githubcode/springboot-demo/result.csv");//CSV文件
+            BufferedWriter bw = new BufferedWriter(new FileWriter(csv, true));
+            //新增一行数据
+            bw.write("类别 1、新项目中无对应文件。2、新项目中文件变更" + "," + "旧文件路径名" + "," + "新文件路径名");
+            for (ResultDTO resultDTO : resultDTOList) {
+                bw.newLine();
+                bw.write(resultDTO.getClassify() + "," + resultDTO.getOldFileName() + "," + resultDTO.getNewFileName());
+            }
+            bw.close();
+        } catch (FileNotFoundException e) {
+            //捕获File对象生成时的异常
+            e.printStackTrace();
+        } catch (IOException e) {
+            //捕获BufferedWriter对象关闭时的异常
+            e.printStackTrace();
+        }
+    }
+
 
 }
