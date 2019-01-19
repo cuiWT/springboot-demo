@@ -25,14 +25,14 @@ public class CodelineTest extends BaseControllerTest {
     @Test
     public void count() throws FileNotFoundException {
 
-        File file = new File("you code path");
+        File file = new File("/Users/yicheng/belle/allcode/miu-front-member");
         // 根据用户输入的文件名和目录执行代码量统计
         codeStat(file);
 
         System.out.println("－－－－－－－－－－统计结果－－－－－－－－－");
         System.out.println("文件数量：" + fileCount + "个");
-        System.out.println(file + "文件/目录总行数：" + totalLine);
-        System.out.println("代码行数：" + codeLine);
+        System.out.println("总行数：" + totalLine);
+        System.out.println("java代码行数：" + codeLine);
         System.out.println("注释行数：" + annotationLine);
         System.out.println("空白行数：" + blankLine);
         long otherLine = totalLine - (codeLine + annotationLine + blankLine);
