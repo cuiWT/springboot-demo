@@ -20,7 +20,7 @@ public class CompareFileTest {
     @Test
     public void count() throws FileNotFoundException {
 
-        File file = new File("/Users/yicheng/Downloads/language/python/python-code/git/git");
+        File file = new File("/Users/yicheng/Downloads/language/python/python-code/git/git/member-integral-union");
         // 根据用户输入的文件名和目录执行代码量统计
         List<FileNameDTO> javaDtoList = new ArrayList<>();
         List<FileNameDTO> configDtoList = new ArrayList<>();
@@ -49,6 +49,49 @@ public class CompareFileTest {
         List<String> newConfigKey = newConfigDtoList.stream().map(FileNameDTO::getShotName).collect(Collectors.toList());
         List<String> newSqlKey = newSqlDtoList.stream().map(FileNameDTO::getShotName).collect(Collectors.toList());
         List<String> newOtherKey = newOtherDtoList.stream().map(FileNameDTO::getShotName).collect(Collectors.toList());
+
+        Map<String, List<FileNameDTO>> javaMd5Map = javaDtoList.stream()
+                .collect(Collectors.groupingBy(FileNameDTO::getShotName));
+
+        Map<String, List<FileNameDTO>> newJavaMd5Map = newJavaDtoList.stream()
+                .collect(Collectors.groupingBy(FileNameDTO::getShotName));
+
+        List<ResultDTO> resultDTOList = new ArrayList<>();
+
+        List<String> newNotHaveJavaList = new ArrayList<>(javaKey);
+        newNotHaveJavaList.removeAll(newJavaKey);
+        ResultDTO resultDTO;
+        for (String shortName : newNotHaveJavaList) {
+            resultDTO = new ResultDTO();
+            resultDTO.setOldFileName(shortName);
+            resultDTO.setClassify(1);
+            resultDTOList.add(resultDTO);
+        }
+
+        List<String> bothHaveFileList = new ArrayList<>(javaKey);
+        bothHaveFileList.retainAll(newJavaKey);
+        for (String shortName : bothHaveFileList) {
+            List<FileNameDTO> oldList = javaMd5Map.get(shortName);
+            List<FileNameDTO> newList = newJavaMd5Map.get(shortName);
+            if (oldList.size() > 1 || newList.size() > 1) {
+                resultDTO = new ResultDTO();
+                resultDTO.setClassify(3);
+                resultDTO.setOldFileName(String.join("分割符", oldList.stream().map(fileNameDTO -> fileNameDTO.getFullName()).collect(Collectors.toList())));
+                resultDTO.setNewFileName(String.join("分隔符", newList.stream().map(fileNameDTO -> fileNameDTO.getFullName()).collect(Collectors.toList())));
+                resultDTOList.add(resultDTO);
+                continue;
+            }
+
+            if (!javaMd5Map.get(shortName).get(0).getMd5().equals(newJavaMd5Map.get(shortName).get(0).getMd5())) {
+                resultDTO = new ResultDTO();
+                resultDTO.setOldFileName(javaMd5Map.get(shortName).get(0).getFullName());
+                resultDTO.setNewFileName(newJavaMd5Map.get(shortName).get(0).getFullName());
+                resultDTO.setClassify(2);
+                resultDTOList.add(resultDTO);
+            }
+        }
+
+        writeCsv(resultDTOList);
 
         System.out.println("－－－－－－－－－－统计结果－－－－－－－－－\n");
         System.out.print("java:\n" );
@@ -132,7 +175,7 @@ public class CompareFileTest {
             File csv = new File("/Users/yicheng/belle/githubcode/springboot-demo/result.csv");//CSV文件
             BufferedWriter bw = new BufferedWriter(new FileWriter(csv, true));
             //新增一行数据
-            bw.write("类别 1、新项目中无对应文件。2、新项目中文件变更" + "," + "旧文件路径名" + "," + "新文件路径名");
+            bw.write("类别 1、新项目中无对应文件。2、新项目中文件变更。3、重复文件" + "," + "旧文件路径名" + "," + "新文件路径名");
             for (ResultDTO resultDTO : resultDTOList) {
                 bw.newLine();
                 bw.write(resultDTO.getClassify() + "," + resultDTO.getOldFileName() + "," + resultDTO.getNewFileName());
@@ -147,5 +190,27 @@ public class CompareFileTest {
         }
     }
 
+    @Test
+    public void contain() {
+        List<String> list1 = new ArrayList<String>();
+        list1.add("A");
+        list1.add("activity/AppTest.java");
+        list1.add("C");
+
+        List<String> list2 = new ArrayList<String>();
+        list2.add("C");
+        list2.add("activity/AppTest.java");
+        list2.add("D");
+//        // 并集
+//        list1.addAll(list2);
+//        // 去重复并集
+//        list2.removeAll(list1);
+//        list1.addAll(list2);
+//        // 交集
+        list1.retainAll(list2);
+        // 差集
+//        list1.removeAll(list2);
+        System.out.print("\n");
+    }
 
 }
