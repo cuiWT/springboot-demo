@@ -1,11 +1,12 @@
 package com.example.consumerTest;
 
-import javafx.util.Pair;
 import org.junit.Test;
 import org.springframework.util.CollectionUtils;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CompareFileTest {
@@ -20,7 +21,7 @@ public class CompareFileTest {
     @Test
     public void count() throws FileNotFoundException {
 
-        File file = new File("/Users/yicheng/Downloads/language/python/python-code/git/git/member-integral-union");
+        File file = new File("/Users/yicheng/Downloads/language/python/python-code/git/git");
         // 根据用户输入的文件名和目录执行代码量统计
         List<FileNameDTO> javaDtoList = new ArrayList<>();
         List<FileNameDTO> configDtoList = new ArrayList<>();
@@ -30,7 +31,7 @@ public class CompareFileTest {
 
         //-----------------------------------------------------
 
-        File newFile = new File("/Users/yicheng/Downloads/language/python/python-code/git/git");
+        File newFile = new File("/Users/yicheng/belle/allcode/member-center");
         // 根据用户输入的文件名和目录执行代码量统计
         List<FileNameDTO> newJavaDtoList = new ArrayList<>();
         List<FileNameDTO> newConfigDtoList = new ArrayList<>();
@@ -137,20 +138,35 @@ public class CompareFileTest {
                 codeStat(target, javaDtoList, configDtoList, sqlDtoList, otherDtoList);
             }
         } else {
-            String fileName = file.getAbsolutePath();
+            String fileName = file.getAbsolutePath().replace("/Users/yicheng/Downloads/language/python/python-code/git/git/", "")
+                    .replace("/Users/yicheng/belle/allcode/member-center", "");
             String fileMd5 = Md5Util.getMd5ByFile(file);
             String[] wonhigh = fileName.split("cn/wonhigh/o2o/");
             String shortName =  wonhigh.length > 1
                     ? wonhigh[1]
-                    : fileName.replaceFirst("/Users/yicheng/Downloads/language/python/python-code/git/git/", "")
+                    : fileName.replace("/Users/yicheng/Downloads/language/python/python-code/git/git/", "")
                     .replace("member-integral-union/", "")
                     .replace("miu-base/", "")
                     .replace("miu-cap/", "")
                     .replace("miu-common-utils/","")
                     .replace("miu-intemarket/","")
                     .replace("miu-mshop/", "")
-                    .replace("miu-tag/", "");
-            Pair<String, String> pair = new Pair<>(fileName, fileMd5);
+                    .replace("miu-tag/", "")
+                    .replace("crm-admin-server","")
+                    .replace("member-api-parent","")
+                    .replace("member-api-server","")
+                    .replace("member-base","")
+                    .replace("member-center","")
+                    .replace("member-center-server","")
+                    .replace("member-common-server","")
+                    .replace("member-label","")
+                    .replace("member-mall","")
+                    .replace("member-mall-server","")
+                    .replace("member-marketing","")
+                    .replace("member-message","")
+                    .replace("member-outside","")
+                    .replace("member-wecaht-server","")
+                    .replace("member-wechat","");
             FileNameDTO fileNameDTO = new FileNameDTO();
             fileNameDTO.setFullName(fileName);
             fileNameDTO.setShotName(shortName);
@@ -211,6 +227,18 @@ public class CompareFileTest {
         // 差集
 //        list1.removeAll(list2);
         System.out.print("\n");
+    }
+
+    @Test
+    public void testMd5() {
+
+        File file = new File("/Users/yicheng/belle/allcode/member-center/member-center/member-center-provider/src/main/java/cn/wonhigh/o2o/center/data/converge/provider/service/order/OrderDataServiceImpl.java");
+        File demo = new File("/Users/yicheng/Downloads/language/python/python-code/git/git/miu-tag/center/data-converge-center/data-converge-provider/src/main/java/cn/wonhigh/o2o/center/data/converge/provider/service/order/OrderDataServiceImpl.java");
+        String fileMd5 = Md5Util.getMd5ByFile(file);
+        String demoMd5 = Md5Util.getMd5ByFile(demo);
+        if (fileMd5.equals(demoMd5)) {
+            System.out.print("true");
+        }
     }
 
 }
