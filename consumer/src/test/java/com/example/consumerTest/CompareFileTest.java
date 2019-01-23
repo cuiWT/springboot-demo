@@ -12,13 +12,6 @@ import java.util.stream.Collectors;
 public class CompareFileTest {
 
     @Test
-    public void test() {
-        String test = "/Users/yicheng/Downloads/language/python/python-code/git/git/miu-intemarket/webinterface/activity-backend/src/test/java/cn/wonhigh/o2o/activity/AppTest.javaAppTest.java";
-        String[] wonhigh = test.split("cn/wonhigh/o2o");
-        System.out.print(wonhigh[0]);
-    }
-
-    @Test
     public void count() throws FileNotFoundException {
 
         File file = new File("/Users/yicheng/Downloads/language/python/python-code/git/git");
@@ -153,10 +146,17 @@ public class CompareFileTest {
                 && !pathname.getName().endsWith(".jupiter")
                 && !pathname.getName().endsWith(".gitignore")
                 && !pathname.getName().contains(".git")
+                && !pathname.getName().contains(".idea")
+                && !pathname.getName().contains(".setting")
                 && !pathname.getName().endsWith(".review")
                 && !pathname.getName().endsWith("pom.xml.bak")
                 && !pathname.getName().contains("target")
-                && !pathname.getName().endsWith("jar");
+                && !pathname.getName().endsWith("jar")
+                && !pathname.getName().endsWith("application.properties")
+                && !pathname.getName().contains("assembly")
+                && !pathname.getName().contains("staticcommon")
+                && !pathname.getName().contains("mycat")
+                && !pathname.getName().contains("DBscript");
     }
 
     private void codeStat(File file, List<FileNameDTO> javaDtoList,
@@ -181,6 +181,9 @@ public class CompareFileTest {
         } else {
             String fileName = file.getAbsolutePath().replace("/Users/yicheng/Downloads/language/python/python-code/git/git/", "")
                     .replace("/Users/yicheng/belle/allcode/member-center", "");
+            if (fileName.contains("zTreeObj.getSelectedNodes.html")) {
+                System.out.print("");
+            }
             String fileMd5 = Md5Util.getMd5ByFile(file);
             String[] wonhigh = fileName.split("cn/wonhigh/o2o/");
             String shortName =  wonhigh.length > 1
@@ -193,21 +196,47 @@ public class CompareFileTest {
                     .replace("miu-intemarket/","")
                     .replace("miu-mshop/", "")
                     .replace("miu-tag/", "")
-                    .replace("crm-admin-server","")
-                    .replace("member-api-parent","")
-                    .replace("member-api-server","")
-                    .replace("member-base","")
-                    .replace("member-center","")
-                    .replace("member-center-server","")
-                    .replace("member-common-server","")
-                    .replace("member-label","")
-                    .replace("member-mall","")
-                    .replace("member-mall-server","")
-                    .replace("member-marketing","")
-                    .replace("member-message","")
-                    .replace("member-outside","")
-                    .replace("member-wecaht-server","")
-                    .replace("member-wechat","");
+                    .replace("crm-admin-server/","")
+                    .replace("member-api-parent/","")
+                    .replace("member-api-server/","")
+                    .replace("member-base/","")
+                    .replace("member-center/","")
+                    .replace("member-center-server/","")
+                    .replace("member-common-server/","")
+                    .replace("member-label/","")
+                    .replace("member-mall/","")
+                    .replace("member-mall-server/","")
+                    .replace("member-marketing/","")
+                    .replace("member-message/","")
+                    .replace("member-outside/","")
+                    .replace("member-wecaht-server/","")
+                    .replace("member-wechat/","")
+                    .replace("server/wechat-server", "")
+                    .replace("server/wcap-server", "")
+                    .replace("server/store-server", "")
+                    .replace("server/pointshop-server", "")
+                    .replace("server/platform-server", "")
+                    .replace("webinterface/member-backend","")
+                    .replace("server/frontcommon-server", "")
+                    .replace("webinterface/analyze-backend", "")
+                    .replace("server/intemarket-server", "")
+                    .replace("webinterface/intemarket-backend", "")
+                    .replace("server/portal-server", "")
+                    .replace("server/customback-server", "")
+                    .replace("server/member-server","")
+                    .replace("server/extension-server", "")
+                    .replace("webinterface/evaluation-backend", "")
+                    .replace("server/solr-server", "")
+                    .replace("server/crm-server", "")
+                    .replace("webinterface/activity-backend", "")
+                    .replace("webinterface/activity-backend", "")
+                    .replace("server/mmarket-server", "")
+                    .replace("server/eye-server", "")
+                    .replace("server/pointback-server", "")
+                    .replace("server/log-server", "")
+                    .replace("server/file-server", "");
+
+
             FileNameDTO fileNameDTO = new FileNameDTO();
             fileNameDTO.setFullName(fileName);
             fileNameDTO.setShotName(shortName);
@@ -282,6 +311,14 @@ public class CompareFileTest {
         if (fileMd5.equals(demoMd5)) {
             System.out.print("true");
         }
+    }
+
+
+    @Test
+    public void test() {
+        String test = "/Users/yicheng/Downloads/language/python/python-code/git/git/miu-intemarket/webinterface/activity-backend/src/test/java/cn/wonhigh/o2o/activity/AppTest.javaAppTest.java";
+        String[] wonhigh = test.split("cn/wonhigh/o2o");
+        System.out.print(wonhigh[0]);
     }
 
 }
