@@ -57,14 +57,50 @@ public class CompareFileTest {
         Map<String, List<FileNameDTO>> newJavaMd5Map = newJavaDtoList.stream()
                 .collect(Collectors.groupingBy(FileNameDTO::getShotName));
 
-        List<ResultDTO> resultDTOList = new ArrayList<>();
+        Map<String, List<FileNameDTO>> configMd5Map = configDtoList.stream()
+                .collect(Collectors.groupingBy(FileNameDTO::getShotName));
 
+        Map<String, List<FileNameDTO>> newConfigMd5Map = newConfigDtoList.stream()
+                .collect(Collectors.groupingBy(FileNameDTO::getShotName));
+
+        Map<String, List<FileNameDTO>> sqlMd5Map = sqlDtoList.stream()
+                .collect(Collectors.groupingBy(FileNameDTO::getShotName));
+
+        Map<String, List<FileNameDTO>> newSqlMd5Map = newSqlDtoList.stream()
+                .collect(Collectors.groupingBy(FileNameDTO::getShotName));
+
+        Map<String, List<FileNameDTO>> otherMd5Map = otherDtoList.stream()
+                .collect(Collectors.groupingBy(FileNameDTO::getShotName));
+
+        Map<String, List<FileNameDTO>> newOtherMd5Map = newOtherDtoList.stream()
+                .collect(Collectors.groupingBy(FileNameDTO::getShotName));
+
+        List<ResultDTO> resultDTOList = new ArrayList<>();
+        result(resultDTOList,javaKey,newJavaKey,javaMd5Map,newJavaMd5Map);
+        result(resultDTOList,configKey,newConfigKey,configMd5Map,newConfigMd5Map);
+        result(resultDTOList,sqlKey,newSqlKey,sqlMd5Map,newSqlMd5Map);
+        result(resultDTOList,otherKey,newOtherKey,otherMd5Map,newOtherMd5Map);
+
+        writeCsv(resultDTOList);
+
+        System.out.println("－－－－－－－－－－统计结果－－－－－－－－－\n");
+    }
+
+    private void result(List<ResultDTO> resultDTOList, List<String> javaKey,
+                        List<String> newJavaKey,
+                        Map<String, List<FileNameDTO>> javaMd5Map,
+                        Map<String, List<FileNameDTO>> newJavaMd5Map) {
         List<String> newNotHaveJavaList = new ArrayList<>(javaKey);
         newNotHaveJavaList.removeAll(newJavaKey);
         ResultDTO resultDTO;
         for (String shortName : newNotHaveJavaList) {
             resultDTO = new ResultDTO();
-            resultDTO.setOldFileName(shortName);
+            String fullName = javaMd5Map.get(shortName).get(0).getFullName();
+            resultDTO.setOldFileName(fullName);
+            resultDTO.setProject(fullName.replace(shortName, "")
+                    .replace("cn/wonhigh/o2o/", "")
+                    .replace("src/test/java/", "")
+                    .replace("src/main/java/", ""));
             resultDTO.setClassify(1);
             resultDTOList.add(resultDTO);
         }
@@ -77,32 +113,34 @@ public class CompareFileTest {
             if (oldList.size() > 1 || newList.size() > 1) {
                 resultDTO = new ResultDTO();
                 resultDTO.setClassify(3);
+                String fullName = oldList.get(0).getFullName();
+                resultDTO.setOldFileName(fullName);
+                resultDTO.setProject(fullName.replace(shortName, "")
+                        .replace("cn/wonhigh/o2o/", "")
+                        .replace("src/test/java/", "")
+                        .replace("src/main/java/", ""));
                 resultDTO.setOldFileName(String.join("分割符", oldList.stream().map(fileNameDTO -> fileNameDTO.getFullName()).collect(Collectors.toList())));
                 resultDTO.setNewFileName(String.join("分隔符", newList.stream().map(fileNameDTO -> fileNameDTO.getFullName()).collect(Collectors.toList())));
+                resultDTO.setProject(fullName.replace(shortName, ""));
                 resultDTOList.add(resultDTO);
                 continue;
             }
 
-            if (!javaMd5Map.get(shortName).get(0).getMd5().equals(newJavaMd5Map.get(shortName).get(0).getMd5())) {
+            if (!oldList.get(0).getMd5().equals(newList.get(0).getMd5())) {
                 resultDTO = new ResultDTO();
-                resultDTO.setOldFileName(javaMd5Map.get(shortName).get(0).getFullName());
-                resultDTO.setNewFileName(newJavaMd5Map.get(shortName).get(0).getFullName());
+                String fullName = oldList.get(0).getFullName();
+
+                resultDTO.setOldFileName(fullName);
+                resultDTO.setNewFileName(newList.get(0).getFullName());
                 resultDTO.setClassify(2);
+                resultDTO.setProject(fullName.replace(shortName, "")
+                        .replace("cn/wonhigh/o2o/", "")
+                        .replace("src/test/java/", "")
+                        .replace("src/main/java/", ""));
                 resultDTOList.add(resultDTO);
             }
         }
 
-        writeCsv(resultDTOList);
-
-        System.out.println("－－－－－－－－－－统计结果－－－－－－－－－\n");
-        System.out.print("java:\n" );
-        System.out.print(newJavaKey.removeAll(javaKey));
-        System.out.print("config:\n");
-        System.out.print(newConfigKey.removeAll(configKey));
-        System.out.print("sql:\n");
-        System.out.print(newSqlKey.removeAll(sqlKey));
-        System.out.print("other:\n");
-        System.out.print(newOtherKey.removeAll(otherKey));
     }
 
     /**
@@ -115,7 +153,10 @@ public class CompareFileTest {
                 && !pathname.getName().endsWith(".jupiter")
                 && !pathname.getName().endsWith(".gitignore")
                 && !pathname.getName().contains(".git")
-                && !pathname.getName().endsWith(".review");
+                && !pathname.getName().endsWith(".review")
+                && !pathname.getName().endsWith("pom.xml.bak")
+                && !pathname.getName().contains("target")
+                && !pathname.getName().endsWith("jar");
     }
 
     private void codeStat(File file, List<FileNameDTO> javaDtoList,
@@ -191,10 +232,12 @@ public class CompareFileTest {
             File csv = new File("/Users/yicheng/belle/githubcode/springboot-demo/result.csv");//CSV文件
             BufferedWriter bw = new BufferedWriter(new FileWriter(csv, true));
             //新增一行数据
-            bw.write("类别 1、新项目中无对应文件。2、新项目中文件变更。3、重复文件" + "," + "旧文件路径名" + "," + "新文件路径名");
+            bw.write("类别 1、新项目中无对应文件。2、新项目中文件变更。3、重复文件" + "," + "项目" +
+                    ","+ "旧文件路径名" + "," + "新文件路径名");
             for (ResultDTO resultDTO : resultDTOList) {
                 bw.newLine();
-                bw.write(resultDTO.getClassify() + "," + resultDTO.getOldFileName() + "," + resultDTO.getNewFileName());
+                bw.write(resultDTO.getClassify() + "," + resultDTO.getProject() + "," +
+                        resultDTO.getOldFileName() + "," + resultDTO.getNewFileName());
             }
             bw.close();
         } catch (FileNotFoundException e) {

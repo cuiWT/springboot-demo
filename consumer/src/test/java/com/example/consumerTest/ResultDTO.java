@@ -8,6 +8,11 @@ import java.io.Serializable;
 public class ResultDTO implements Serializable {
 
     /**
+     * 工程
+     */
+    private String project;
+
+    /**
      * 旧项目文件名
      */
     private String oldFileName;
