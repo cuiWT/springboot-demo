@@ -156,7 +156,9 @@ public class CompareFileTest {
                 && !pathname.getName().contains("assembly")
                 && !pathname.getName().contains("staticcommon")
                 && !pathname.getName().contains("mycat")
-                && !pathname.getName().contains("DBscript");
+                && !pathname.getName().contains("DBscript")
+                && !pathname.getName().contains("bata-log-driver")
+                && !pathname.getName().contains("desktop");
     }
 
     private void codeStat(File file, List<FileNameDTO> javaDtoList,
@@ -181,7 +183,7 @@ public class CompareFileTest {
         } else {
             String fileName = file.getAbsolutePath().replace("/Users/yicheng/Downloads/language/python/python-code/git/git/", "")
                     .replace("/Users/yicheng/belle/allcode/member-center", "");
-            if (fileName.contains("zTreeObj.getSelectedNodes.html")) {
+            if (fileName.contains("activity/drawActivity/manager/impl/ActivityManagerImpl.java")) {
                 System.out.print("");
             }
             String fileMd5 = Md5Util.getMd5ByFile(file);
