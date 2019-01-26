@@ -12,4 +12,12 @@ public class FileNameDTO implements Serializable {
     private String shotName;
 
     private String md5;
+
+    private String project;
+
+    private String fileName;
+
+    private Integer lineNum;
+
+    private String code;
 }
