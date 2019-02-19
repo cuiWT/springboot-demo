@@ -35,7 +35,7 @@ public class DO {
                 statFile(target, strList);
             }
         } else {
-            if (file.getName().endsWith(".js") || file.getName().endsWith(".jsp")) {
+            if (file.getName().endsWith(".java")) {
 
 
                 BufferedReader reader = null;
@@ -47,10 +47,11 @@ public class DO {
                     // 一次读入一行，直到读入null为文件结束
                     while ((tempString = reader.readLine()) != null) {
                         // 显示行号
-                        if (tempString.length() < 200
-                                && (tempString.contains(".do?") || tempString.contains(".do\""))
-                                && !tempString.contains("contextPath")
-                                && (tempString.contains("+") && ! tempString.contains("do?"))) {
+//                        if (tempString.length() < 200
+////                                && (tempString.contains(".do?") || tempString.contains(".do\""))
+////                                && !tempString.contains("contextPath")
+////                                && (tempString.contains("+") && ! tempString.contains("do?"))) {
+                        if (tempString.contains("@Transactional") && !tempString.contains("(")) {
                             fileNameDTO = new FileNameDTO();
                             fileNameDTO.setCode(tempString);
                             fileNameDTO.setFileName(file.getAbsolutePath().replace("/Users/yicheng/belle/allcode/member-center/", ""));
