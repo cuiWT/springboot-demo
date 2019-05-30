@@ -25,6 +25,13 @@
             <artifactId>provider-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>com.alicp.jetcache</groupId>
+            <artifactId>jetcache-starter-redis</artifactId>
+            <version>2.4.4</version>
+        </dependency>
     </dependencies>
 
     <build>

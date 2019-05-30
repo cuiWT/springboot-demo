@@ -1,11 +1,13 @@
 package com.example.consumer.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.example.consumer.cache.DinnerCache;
 import com.example.providerApi.dto.DinnerDTO;
 import com.example.providerApi.service.DinnerReadService;
 import com.example.providerApi.service.DinnerWriteService;
 import com.example.providerApi.util.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.MalformedURLException;
@@ -24,6 +26,9 @@ public class Dinners {
 
     @Reference(url = "dubbo://127.0.0.1:20880")
     private DinnerReadService dinnerReadService;
+
+    @Autowired
+    private DinnerCache dinnerCache;
 
     @GetMapping("{id}")
     public DinnerDTO find(@PathVariable Long id) throws Exception {
@@ -64,6 +69,16 @@ public class Dinners {
             throw new Exception(resp.getError());
         }
         return resp.getResult();
+    }
+
+    @GetMapping("cache")
+    public DinnerDTO findByIdFromCache(Long id) throws Exception {
+        try {
+            return dinnerCache.findById(id);
+        } catch (Exception e) {
+            log.error("fail, cause:{}", e.getMessage());
+            throw new Exception(e.getMessage());
+        }
     }
 
 //    @GetMapping("/swagger")

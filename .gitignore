@@ -1,4 +1,4 @@
-target
+/target/
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -25,4 +25,7 @@ target
 /.nb-gradle/
 
 *.jar
+*.jar*
 *.class
+*.csv
+*.lst
