@@ -22,17 +22,20 @@ public class PromotionPoint implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String userScopeKey;
+    @Column
+    private String userScopeParameJson;
 
-    @Column(nullable = false)
-    private String executeKey;
+    @Column
+    private String executeParameJson;
 
     @Column(nullable = false)
     private Integer type;
 
     @Column(nullable = false)
     private Integer status;
+
+    @Column
+    private String extraJson;
 
     private Date createDate;
 

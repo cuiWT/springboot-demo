@@ -15,13 +15,15 @@ public class PromotionPointDTO implements Serializable {
 
     private String name;
 
-    private String userScopeKey;
+    private String userScopeParameJson;
 
-    private String executeKey;
+    private String executeParameJson;
 
     private Integer type;
 
     private Integer status;
+
+    private String extraJson;
 
     private Date createDate;
 
