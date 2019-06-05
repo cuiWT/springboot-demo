@@ -14,7 +14,7 @@ import java.util.Map;
 
 
 @Configuration
-@ComponentScan
+@ComponentScan("com.example.providerApi")
 public class PromotionApiConfig {
 
 
@@ -44,4 +44,10 @@ public class PromotionApiConfig {
             }
         };
     }
+//    @ConditionalOnMissingBean(ExpressService.class)
+//    @ConditionalOnProperty("express.100.key")
+//    @Bean
+//    public ExpressService express100Service(@Value("express.100.key") String key) {
+//        return new Express100Service(key);
+//    }
 }

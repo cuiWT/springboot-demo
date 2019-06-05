@@ -1,4 +1,4 @@
-package com.example.provider.point;
+package com.example.consumer.cache;
 
 import com.example.providerApi.point.Behavior;
 import com.example.providerApi.point.PromotionBrick;
@@ -14,7 +14,7 @@ public class CondationActionBehavior implements Behavior {
     @Override
     public void execute(Long userId, Map<String, String> behaviorParams) {
         if (userId != null){
-            log.debug("取出behaviorParams中integration给userId加上");
+            log.error("取出behaviorParams中integration给userId加上");
         }
     }
 }

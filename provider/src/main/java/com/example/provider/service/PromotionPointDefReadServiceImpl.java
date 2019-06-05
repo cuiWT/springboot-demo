@@ -5,9 +5,6 @@ import com.baidu.unbiz.easymapper.MapperFactory;
 import com.example.provider.dao.PromotionPointDefDao;
 import com.example.provider.model.PromotionPointDef;
 import com.example.providerApi.dto.PromotionPointDefDTO;
-import com.example.providerApi.point.Behavior;
-import com.example.providerApi.point.PromotionBricks;
-import com.example.providerApi.point.PromotionTool;
 import com.example.providerApi.service.PromotionPointDefReadService;
 import com.example.providerApi.util.Response;
 import com.google.common.base.Throwables;
@@ -17,19 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Component
 @Service(interfaceClass = PromotionPointDefReadService.class)
-public class PromotionPointDefReadServiceImpl implements PromotionPointDefReadService {
+public class PromotionPointDefReadServiceImpl implements PromotionPointDefReadService, Serializable {
 
+    private static final long serialVersionUID = 2377336327214818525L;
     @Autowired
     PromotionPointDefDao promotionPointDefDao;
-
-    @Autowired
-    PromotionBricks promotionBricks;
 
     @Override
     public Response<PromotionPointDefDTO> findById(Long id) {
@@ -66,33 +62,6 @@ public class PromotionPointDefReadServiceImpl implements PromotionPointDefReadSe
         }
     }
 
-    @Override
-    public Response<PromotionTool<? extends Behavior>> findBehaviorTool(Long id) {
-        try {
-            Optional<PromotionPointDef> promotionPointDefOp = promotionPointDefDao.findById(id);
-            if (!promotionPointDefOp.isPresent()){
-                return Response.fail("promotionPointDef.not.find");
-            }
-            PromotionPointDef promotionPointDef = promotionPointDefOp.get();
-
-            return Response.ok(new PromotionTool<Behavior>() {
-                @Override
-                public Behavior behavior() {
-                    String behaviorKey = promotionPointDef.getExecuteKey();
-                    Behavior behavior = promotionBricks.getBehavior(behaviorKey);
-
-                    if (behavior == null) {
-                        log.error("behavior key({}) not registered ", behaviorKey);
-                        throw new IllegalArgumentException("brick.key.unknown");
-                    }
-                    return behavior;
-                }
-            });
-        } catch (Exception e) {
-            log.error("find BehaviorTool by id:{} fail, cause:{}", id, Throwables.getStackTraceAsString(e));
-            return Response.fail("PromotionPointDef.tool.find.fail");
-        }
-    }
 
 
 }
