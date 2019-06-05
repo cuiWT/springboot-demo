@@ -1,4 +1,4 @@
-package com.example.consumer.cache;
+package com.example.consumer.behavior;
 
 import com.example.providerApi.point.Behavior;
 import com.example.providerApi.point.PromotionBrick;
@@ -10,7 +10,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @PromotionBrick(key = "send-integration")
-public class CondationActionBehavior implements Behavior {
+public class SendIntegrationBehavior implements Behavior {
     @Override
     public void execute(Long userId, Map<String, String> behaviorParams) {
         if (userId != null){
