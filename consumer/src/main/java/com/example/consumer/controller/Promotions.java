@@ -38,7 +38,7 @@ public class Promotions {
             throw new Exception(resp.getError());
         }
         PromotionPointDTO promotionPointDTO = resp.getResult();
-        Response<PromotionTool<? extends Behavior>> toolResp = promotionToolCacher.findBehaviorTool(promotionId);
+        Response<PromotionTool<? extends Behavior>> toolResp = promotionToolCacher.findBehaviorTool(promotionPointDTO.getDefId());
         if (!toolResp.isSuccess()) {
             log.error("获取 PromotionTool 失败。promotionId:{}, cause:{}", promotionId, resp.getError());
             throw new Exception(resp.getError());
