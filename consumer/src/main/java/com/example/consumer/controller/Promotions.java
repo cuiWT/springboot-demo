@@ -31,7 +31,7 @@ public class Promotions {
     PromotionToolCacher promotionToolCacher;
 
     @PostMapping("action")
-    public void action(Long userId, Long promotionId) throws Exception {
+    public String action(Long userId, Long promotionId) throws Exception {
         Response<PromotionPointDTO> resp = promotionPointReadService.findById(promotionId);
         if (!resp.isSuccess()) {
             log.error("获取promotion 失败。promotionId:{}, cause:{}", promotionId, resp.getError());
@@ -45,7 +45,7 @@ public class Promotions {
         }
         final PromotionTool<? extends Behavior> promotionTool = toolResp.getResult();
         final Behavior behavior = promotionTool.behavior();
-        behavior.execute(userId, new HashMap<>());
+        return behavior.execute(userId, new HashMap<>());
 
     }
 }

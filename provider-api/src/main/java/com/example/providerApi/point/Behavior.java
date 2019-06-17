@@ -4,5 +4,5 @@ import java.util.Map;
 
 public interface Behavior {
 
-    void execute(Long userId, Map<String, String> behaviorParams);
+    String execute(Long userId, Map<String, String> behaviorParams);
 }

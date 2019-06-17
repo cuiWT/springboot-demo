@@ -12,9 +12,10 @@ import java.util.Map;
 @PromotionBrick(key = "send-message")
 public class SendMessageBehavior implements Behavior {
     @Override
-    public void execute(Long userId, Map<String, String> behaviorParams) {
+    public String execute(Long userId, Map<String, String> behaviorParams) {
         if (userId!= null) {
             log.error("给userId发送message成功");
         }
+        return "message";
     }
 }

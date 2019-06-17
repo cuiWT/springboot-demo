@@ -12,9 +12,10 @@ import java.util.Map;
 @PromotionBrick(key = "send-integration")
 public class SendIntegrationBehavior implements Behavior {
     @Override
-    public void execute(Long userId, Map<String, String> behaviorParams) {
+    public String execute(Long userId, Map<String, String> behaviorParams) {
         if (userId != null){
             log.error("取出behaviorParams中integration给userId加上");
         }
+        return "integration";
     }
 }
