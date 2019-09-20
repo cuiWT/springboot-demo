@@ -51,7 +51,7 @@ public class DO {
 ////                                && (tempString.contains(".do?") || tempString.contains(".do\""))
 ////                                && !tempString.contains("contextPath")
 ////                                && (tempString.contains("+") && ! tempString.contains("do?"))) {
-                        if (tempString.contains("@Transactional") && !tempString.contains("(")) {
+                        if (tempString.contains("Thread.sleep(100") ) {
                             fileNameDTO = new FileNameDTO();
                             fileNameDTO.setCode(tempString);
                             fileNameDTO.setFileName(file.getAbsolutePath().replace("/Users/yicheng/belle/allcode/member-center/", ""));
